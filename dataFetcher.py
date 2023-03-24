@@ -90,7 +90,7 @@ class DataFetcher:
                 br = CSSSelector('td')(trEls[1])[1].text
                 return float(br)
             except IndexError:      
-                print("wiki page for ", wikiHtml[0], " not found")
+                print("wiki page for ", wikiHtml[0], " is incorrect (didn't find the node with BR)")
                 return 1
     
         vehicleBrs = list(map(extractBr, wikiHtmls))
