@@ -97,6 +97,7 @@ class DataFetcher:
         print(vehicleBrs)
         return max(vehicleBrs)
 
+    @staticmethod
     def performScreenshotTestForUser(self):
         screenShotFileName = 'testScreenshot.png'
         pyautogui.screenshot(screenShotFileName)
