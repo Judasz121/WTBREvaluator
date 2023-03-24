@@ -66,6 +66,8 @@ async def main():
     # userInputLoop()
     image = Image.open('./examples/vlcsnap-2022-12-27-13h52m06s709.png')
     fetcher = DataFetcher(config)
+    await fetcher.runOcrBrEvaluation(image)
+
     
 asyncio.run(main())
 # image = Image.open('./examples/vlcsnap-2022-12-27-13h52m06s709.png')

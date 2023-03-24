@@ -85,9 +85,14 @@ class DataFetcher:
 
         wikiHtmls = await asyncio.gather(*webSearchTasks)
         def extractBr(wikiHtml):
-            trEls = CSSSelector('.general_info_br tr')(wikiHtml[1])
-            br = CSSSelector('td')(trEls[1])[1].text
-            return float(br)
+            try:
+                trEls = CSSSelector('.general_info_br tr')(wikiHtml[1])
+                br = CSSSelector('td')(trEls[1])[1].text
+                return float(br)
+            except IndexError:      
+                print("wiki page for ", wikiHtml[0], " not found")
+                return 1
+    
         vehicleBrs = list(map(extractBr, wikiHtmls))
         print(vehicleBrs)
         return max(vehicleBrs)

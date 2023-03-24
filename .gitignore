@@ -126,3 +126,5 @@ Tesseract-OCR/tessdata/tessconfigs/msdemo
 Tesseract-OCR/tessdata/tessconfigs/nobatch
 Tesseract-OCR/tessdata/tessconfigs/segdemo
 config.json
+__pycache__/config.cpython-39.pyc
+__pycache__/dataFetcher.cpython-39.pyc
