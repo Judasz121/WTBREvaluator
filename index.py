@@ -18,9 +18,13 @@ from commands import UserCommands
 
 
 async def main():
-
-    await UserCommands.exec("stest open")
-    await UserCommands.exec("setconfigval googleApiKey yourmomma")
+    async def inputLoop():
+        await UserCommands.exec(input())
+        await inputLoop()
+        pass
+    await inputLoop()
+    # await UserCommands.exec("stest open")
+    # await UserCommands.exec("setconfigval googleApiKey yourmomma")
     pass
 
     
