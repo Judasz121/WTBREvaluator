@@ -3,7 +3,7 @@ from dataFetcher import DataFetcher
 from config import getConfig, setConfig, setConfigVal
 import pyautogui
 from collections import deque
-from inspect import signature
+from inspect import signature, iscoroutinefunction
 
 class UserCommands:
 
@@ -83,7 +83,7 @@ class UserCommands:
     }
 
     @staticmethod
-    def exec(inputCmd):
+    async def exec(inputCmd):
         inputCmd = inputCmd.strip()
         args = deque(inputCmd.split(' '))
         inputCmd = args.popleft()
@@ -110,6 +110,8 @@ class UserCommands:
             if(funcArgsNum < len(args)):
                 print(f"This command accepts a maximum of {funcArgsNum} parameters, while you provided {len(args)}. Behave yourself!")
                 return False
+            elif iscoroutinefunction(func):
+                await func(*args)
             else:
                 func(*args)
             return True

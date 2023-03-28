@@ -18,9 +18,9 @@ from commands import UserCommands
 
 
 async def main():
-        
-    UserCommands.exec("stest opencc")
-    UserCommands.exec("setconfigval googleApiKey yourmomma")
+
+    await UserCommands.exec("stest open")
+    await UserCommands.exec("setconfigval googleApiKey yourmomma")
     pass
 
     

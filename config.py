@@ -27,4 +27,5 @@ def setConfig(newConfig: dict):
 def setConfigVal(key, value):
     config = getConfig()
     config[key] = value
+    print(config)
     setConfig(config)
