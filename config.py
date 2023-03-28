@@ -18,7 +18,6 @@ def getConfig():
     else:
         with open(configFileName, 'r') as f:
             config = json.load(f)
-            print(config)
         return config
 
 def setConfig(newConfig: dict):

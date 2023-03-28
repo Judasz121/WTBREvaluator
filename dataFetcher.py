@@ -9,6 +9,8 @@ import pyautogui
 import subprocess
 import webbrowser
 import googleapiclient.discovery
+import os
+import sys
 
 
 
@@ -27,10 +29,7 @@ import googleapiclient.discovery
 #     return (name, html.fromstring(wikiHtml))
 
 class DataFetcher:
-    tesseractExePath = None
-    vehicleNamesScreenRegion = (450, 337, 605, 800)
-    googleApiKey = None
-    googleCustomSearchEngineKey = None
+    # vehicleNamesScreenRegion = (450, 337, 605, 800)
     def __init__(self, config):
         self.tesseractExePath = config['tesseractExePath']
         pytesseract.tesseract_cmd = self.tesseractExePath
@@ -94,16 +93,23 @@ class DataFetcher:
                 return 1
     
         vehicleBrs = list(map(extractBr, wikiHtmls))
-        print(vehicleBrs)
-        return max(vehicleBrs)
+        return vehicleBrs
 
-    @staticmethod
-    def performScreenshotTestForUser(self):
+    def performScreenshotTestForUser(self, openImage: bool):
         screenShotFileName = 'testScreenshot.png'
         pyautogui.screenshot(screenShotFileName)
-        path = __file__ + '/' + screenShotFileName
-        subprocess.run(['open', path])
-        webbrowser.open(path)
+        with Image.open(screenShotFileName) as image:
+            image = image.crop(self.vehicleNamesScreenRegion)
+            image.save(screenShotFileName)
+        absolutePath = os.path.dirname(os.path.realpath(__file__)) + '\\' + screenShotFileName
+
+        if(openImage):
+            imageViewerFromCommandLine = {'linux':'xdg-open',
+                                    'win32':'explorer',
+                                    'darwin':'open'}[sys.platform]
+            subprocess.run([imageViewerFromCommandLine, absolutePath])
+            # webbrowser.open(path)
+        pass
 
 
 

@@ -2,7 +2,8 @@ import asyncio
 from dataFetcher import DataFetcher
 from config import getConfig, setConfig, setConfigVal
 import pyautogui
-
+from collections import deque
+from inspect import signature
 
 class UserCommands:
 
@@ -18,18 +19,18 @@ class UserCommands:
         print('"/" in a command name means that the command has an abbreviation.')
         print('commands:')
 
-        for key in UserCommands.commandsList:
-            UserCommands.commandsList[key]['print']()
+        for key in UserCommands.commandsDict:
+            UserCommands.commandsDict[key]['print']()
         pass   
 
 
     @staticmethod
     async def checkbr():
         fetcher = DataFetcher(getConfig())
-        screenshot = pyautogui.screenshot('testscreenshot.png')
-        br = await fetcher.runOcrBrEvaluation(screenshot)
-        print('BR: ', br)
-        return br
+        screenshot = pyautogui.screenshot()
+        brs = await fetcher.runOcrBrEvaluation(screenshot)
+        print(brs)
+        print('max BR: ', max(brs))
         pass   
     @staticmethod
     def __checkbr_print():
@@ -50,17 +51,21 @@ class UserCommands:
         pass
 
     @staticmethod
-    def testscreenshot():
-        DataFetcher.performScreenshotTestForUser()
+    def testscreenshot(open = ""):
+        if open.lower() in ['o', 'open']:
+            open = True
+        else: open = False
+        DataFetcher(getConfig()).performScreenshotTestForUser(open)
         pass
     @staticmethod
     def __testscreenshot_print():
         print()
         print('===testscreenshot===')
         print('Takes a screenshot of an area on the screen based on config and saves it into the same folder as this .exe.')
+        print('args:\n1.opens file with default photo viewer if "o" or "open" is provided')
         pass
 
-    commandsList = {
+    commandsDict = {
         'checkbr': {
             'print': __checkbr_print.__func__,
             'abbreviations': 'cb',
@@ -68,12 +73,50 @@ class UserCommands:
         },
         'setconfigval': {
             'print': __setconfigval_print.__func__,
-            'exec': setconfigval.__func__
+            'exec': setconfigval.__func__  
         },
         'testscreenshot': {
             'print': __testscreenshot_print.__func__,
+            'abbreviations': 'stest',
             'exec': testscreenshot.__func__
         }
     }
+
+    @staticmethod
+    def exec(inputCmd):
+        inputCmd = inputCmd.strip()
+        args = deque(inputCmd.split(' '))
+        inputCmd = args.popleft()
+        if inputCmd.lower() in ['help', 'h']:
+            UserCommands.printCommandsDocumentation()
+            return
+        
+        def checkCommandNameMatch(dictCmd):
+            if(dictCmd.lower() == inputCmd.lower()):
+                return True
+            if not 'abbreviations' in UserCommands.commandsDict[dictCmd]:
+                return False
+            abbr = UserCommands.commandsDict[dictCmd]['abbreviations']
+            if(isinstance(abbr, list) and inputCmd in abbr):
+                return True
+            elif isinstance(abbr, str) and abbr.lower() == inputCmd.lower():
+                return True
+            return False                
+            pass
+        foundCmd = list(filter(checkCommandNameMatch, UserCommands.commandsDict))
+        if(len(foundCmd) > 0):
+            func = UserCommands.commandsDict[foundCmd[0]]['exec']
+            funcArgsNum = len(signature(func).parameters)
+            if(funcArgsNum < len(args)):
+                print(f"This command accepts a maximum of {funcArgsNum} parameters, while you provided {len(args)}. Behave yourself!")
+                return False
+            else:
+                func(*args)
+            return True
+        else:
+            print("Command not recognized.")
+            print('Use "h" or "help" for a list of commands.')        
+            return False
+        pass
 
 

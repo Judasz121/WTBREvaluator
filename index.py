@@ -18,12 +18,9 @@ from commands import UserCommands
 
 
 async def main():
-    # userInputLoop()
-    # image = Image.open('./examples/vlcsnap-2022-12-27-13h52m06s709.png')
-    # fetcher = DataFetcher(config)
-    # await fetcher.runOcrBrEvaluation(image)
-    UserCommands.printCommandsDocumentation()
-    # UserCommands.instanceMethod(UserCommands())
+        
+    UserCommands.exec("stest opencc")
+    UserCommands.exec("setconfigval googleApiKey yourmomma")
     pass
 
     
