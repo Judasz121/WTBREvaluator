@@ -42,6 +42,8 @@ class UserCommands:
     @staticmethod
     async def setconfigval(key, value):
         setConfigVal(key, value)
+        print("config updated")
+        print(getConfig())
         pass
     @staticmethod
     def __setconfigval_print():
